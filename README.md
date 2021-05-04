@@ -1,2 +1,2 @@
 # moeconfig
-A simple config parser
+A simple C config parser
