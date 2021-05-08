@@ -35,11 +35,13 @@ config_get_value(char *dest, const char *section, const char *key)
 		return NULL;
 	}
 
-	char buffer[BUFFER_SIZE+1] = {0};
+	char buffer[BUFFER_SIZE+1];
 	char *line = NULL;
 	char *current = NULL;
 	char *k = NULL;
-	/* int linecount = 1; */
+	/* size_t linecount = 1; */
+
+	memset(buffer, '\0', sizeof(buffer));
 
 	/* find section */
 	while ((line = fgets(buffer, BUFFER_SIZE, f))) {
@@ -47,7 +49,7 @@ config_get_value(char *dest, const char *section, const char *key)
 		if ((current = strstr(line, COMMENT)))
 			*current = '\0'; /* cut # char, ignore the rest */
 
-		line = ltrim(rtrim(line)); /* clear white chars */
+		line = ltrim(line); /* clear white chars */
 		if (line[0] != LSECTION) {
 			/* memset(buffer, '\0', sizeof(buffer)); */
 			continue;
