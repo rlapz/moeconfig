@@ -1,4 +1,5 @@
 # moeconfig
+
 A simple config parser
 
 `Example config file`
