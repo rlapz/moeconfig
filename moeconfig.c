@@ -35,13 +35,11 @@ config_get_value(char *dest, const char *section, const char *key)
 		return NULL;
 	}
 
-	char buffer[BUFFER_SIZE+1];
+	char buffer[BUFFER_SIZE+1] = {0};
 	char *line = NULL;
 	char *current = NULL;
 	char *k = NULL;
 	/* size_t linecount = 1; */
-
-	memset(buffer, '\0', sizeof(buffer));
 
 	/* find section */
 	while ((line = fgets(buffer, BUFFER_SIZE, f))) {
@@ -49,11 +47,9 @@ config_get_value(char *dest, const char *section, const char *key)
 		if ((current = strstr(line, COMMENT)))
 			*current = '\0'; /* cut # char, ignore the rest */
 
-		line = ltrim(line); /* clear white chars */
-		if (line[0] != LSECTION) {
-			/* memset(buffer, '\0', sizeof(buffer)); */
+		line = ltrim(line); /* clear left white chars */
+		if (line[0] != LSECTION)
 			continue;
-		}
 
 		if (strncmp(line+1, section, strlen(section)) == 0) {
 			/* section found */
@@ -68,7 +64,7 @@ config_get_value(char *dest, const char *section, const char *key)
 
 				k = strtok(k, DELIMITER); /* split string by token(delimiter) */
 				/* compare key */
-				if (strncmp(rtrim(ltrim(k)), key, strlen(key)) == 0) {
+				if (strncmp(rtrim(k), key, strlen(key)) == 0) {
 					k = strtok(NULL, DELIMITER);
 					k = rtrim(ltrim(k));
 					if (strlen(k) == 0)
