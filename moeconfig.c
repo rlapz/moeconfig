@@ -83,7 +83,7 @@ config_get_value(char *dest, const char *section, const char *key)
 	}
 cleanup:
 	fclose(f);
-	if (value_len > 0);
+	if (value_len > 0)
 		return dest;
 	return NULL;
 }
