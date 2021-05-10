@@ -35,43 +35,47 @@ config_get_value(char *dest, const char *section, const char *key)
 		return NULL;
 	}
 
-	char buffer[BUFFER_SIZE+1] = {0};
-	char *line = NULL;
-	char *current = NULL;
-	char *k = NULL;
+	char *k				= NULL;
+	char *v				= NULL;
+	char *line			= NULL;
+	char *current			= NULL;
+	char buffer[BUFFER_SIZE+1]	= {0};
+	size_t value_len		= 0;
+	size_t key_len			= strlen(key);
+	size_t section_len		= strlen(section);
 	/* size_t linecount = 1; */
 
 	/* find section */
 	while ((line = fgets(buffer, BUFFER_SIZE, f))) {
 		/* linecount++; */
 		if ((current = strstr(line, COMMENT)))
-			*current = '\0'; /* cut # char, ignore the rest */
+			*current = '\0'; /* cut on # char, ignore the rest */
 
 		line = ltrim(line); /* clear left white chars */
 		if (line[0] != LSECTION)
 			continue;
 
-		if (strncmp(line+1, section, strlen(section)) == 0) {
+		if (strncmp(line+1, section, section_len) == 0) {
 			/* section found */
 			/* then find value of key */
 			while ((k = fgets(buffer, BUFFER_SIZE, f)) && (k[0] != LSECTION)) {
-				k = ltrim(rtrim(k));
-
 				if ((current = strstr(k, COMMENT)))
 					*current = '\0';
 				if (strlen(k) == 0 || !strstr(k, DELIMITER))
 					continue;
 
-				k = strtok(k, DELIMITER); /* split string by token(delimiter) */
+				k = strtok(ltrim(k), DELIMITER); /* split string by token(delimiter) */
 				/* compare key */
-				if (strncmp(rtrim(k), key, strlen(key)) == 0) {
-					k = strtok(NULL, DELIMITER);
-					k = rtrim(ltrim(k));
-					if (strlen(k) == 0)
+				if (strncmp(k, key, key_len) == 0) {
+					v = strtok(NULL, DELIMITER);
+					v = rtrim(ltrim(v));
+					value_len = strlen(v);
+					if (value_len == 0)
 						goto cleanup;
 					/* value found */
-					strncpy(dest, k, strlen(k));
-					break;
+					strncpy(dest, v, value_len);
+					dest[value_len] = '\0';
+					goto cleanup;
 				}
 			}
 			break;
@@ -79,7 +83,9 @@ config_get_value(char *dest, const char *section, const char *key)
 	}
 cleanup:
 	fclose(f);
-	return dest;
+	if (value_len > 0);
+		return dest;
+	return NULL;
 }
 
 void
