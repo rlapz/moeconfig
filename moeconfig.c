@@ -19,17 +19,6 @@ rtrim(char *str)
 	return str;
 }
 
-/* TODO */
-/*
-#if SET_DEFAULT
-int
-config_set_default(const char *conf)
-{
-	return 0;
-}
-#endif
-*/
-
 char *
 config_get_value(char *dest, const char *section, const char *key)
 {

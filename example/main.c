@@ -7,7 +7,8 @@ main(void)
 	config_get_value(buffer, "DEFAULT", "string");
 	printf("%s\n", buffer);
 	//memset(buffer, '\0', sizeof(buffer));
-	puts(config_get_value(buffer, "GUEST", "user"));
+	config_get_value(buffer, "GUEST", "user");
+	printf("%s\n", buffer);
 
 	return 0;
 }
