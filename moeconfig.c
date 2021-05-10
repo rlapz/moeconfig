@@ -19,15 +19,6 @@ rtrim(char *str)
 	return str;
 }
 
-/* TODO */
-/*
-int
-config_set_default(const char *conf)
-{
-	return 0;
-}
-*/
-
 char *
 config_get_value(char *dest, const char *section, const char *key)
 {
@@ -77,7 +68,7 @@ config_get_value(char *dest, const char *section, const char *key)
 					/* value found */
 					strncpy(dest, v, value_len);
 					dest[value_len] = '\0';
-					goto cleanup;
+					break;
 				}
 			}
 			break;
@@ -92,11 +83,13 @@ cleanup:
 
 /* TODO */
 /*
+#if SET_VALUE
 void
 config_set_value(const char *section, const char *key,
 		const char *value)
 {
 }
+#endif
 */
 
 
