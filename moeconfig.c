@@ -12,19 +12,21 @@ static char *
 rtrim(char *str)
 {
 	char *end = str + strlen(str)-1;
-	while (isspace(*end)) {
+	while (end > str && isspace(*end)) {
 		*end = '\0';
 		end--;
 	}
 	return str;
 }
 
+/* TODO */
+/*
 int
 config_set_default(const char *conf)
 {
-	/* TODO */
 	return 0;
 }
+*/
 
 char *
 config_get_value(char *dest, const char *section, const char *key)
@@ -41,8 +43,6 @@ config_get_value(char *dest, const char *section, const char *key)
 	char *current			= NULL;
 	char buffer[BUFFER_SIZE+1]	= {0};
 	size_t value_len		= 0;
-	size_t key_len			= strlen(key);
-	size_t section_len		= strlen(section);
 	/* size_t linecount = 1; */
 
 	/* find section */
@@ -51,11 +51,11 @@ config_get_value(char *dest, const char *section, const char *key)
 		if ((current = strstr(line, COMMENT)))
 			*current = '\0'; /* cut on # char, ignore the rest */
 
-		line = ltrim(line); /* clear left white chars */
+		line = ltrim(rtrim(line)); /* clear left white chars */
 		if (line[0] != LSECTION)
 			continue;
 
-		if (strncmp(line+1, section, section_len) == 0) {
+		if (strcmp(line+1, section) == 0) {
 			/* section found */
 			/* then find value of key */
 			while ((k = fgets(buffer, BUFFER_SIZE, f)) && (k[0] != LSECTION)) {
@@ -66,7 +66,7 @@ config_get_value(char *dest, const char *section, const char *key)
 
 				k = strtok(ltrim(k), DELIMITER); /* split string by token(delimiter) */
 				/* compare key */
-				if (strncmp(k, key, key_len) == 0) {
+				if (strcmp(rtrim(k), key) == 0) {
 					v = strtok(NULL, DELIMITER);
 					v = rtrim(ltrim(v));
 					value_len = strlen(v);
@@ -88,9 +88,13 @@ cleanup:
 	return NULL;
 }
 
+/* TODO */
+/*
 void
 config_set_value(const char *section, const char *key,
 		const char *value)
 {
-	/* TODO */
 }
+*/
+
+
