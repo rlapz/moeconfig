@@ -1,11 +1,11 @@
 #include "moeconfig.h"
 
 static char *
-ltrim(char *str)
+ltrim(const char *str)
 {
 	while (isspace(*str))
 		str++;
-	return str;
+	return (char*)str;
 }
 
 static char *
