@@ -51,7 +51,7 @@ config_get_value(char *dest, const char *section, const char *key)
 		if ((c = strstr(line, COMMENT)))
 			*c = '\0'; /* cut on # char, ignore the rest */
 
-		line = ltrim(line); /* clear white chars */
+		line = ltrim(line);
 		if (line[0] != LSECTION)
 			continue;
 
